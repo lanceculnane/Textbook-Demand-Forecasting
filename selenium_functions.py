@@ -7,7 +7,7 @@ from fake_useragent import UserAgent
 from pyvirtualdisplay import Display
 
 
-def get_site(driver, url, delay=20):
+def get_site(driver, url, delay=10):
     '''
     Input: webdriver object, url to be visited
     5 second conditional delay to wait for full page load
@@ -32,14 +32,12 @@ def get_cookies_for_requests(driver):
     return cookies
 
 def low_bandwidth_chrome():
-    #
-    #display = Display(visible=0, size=(1920, 1080))
-    #display.start()
+    display = Display(visible=0, size=(1920, 1080))
+    display.start()
     chrome_options = webdriver.ChromeOptions()
     prefs = {"profile.managed_default_content_settings.images":2}
     chrome_options.add_experimental_option("prefs",prefs)
     chrome_options.add_argument("user-agent={}".format(UserAgent().random))
-    #
-    #chrome_options.add_argument('--proxy-server=http://127.0.0.1:8118')
+    chrome_options.add_argument('--proxy-server=http://127.0.0.1:8118')
     driver = webdriver.Chrome(chrome_options=chrome_options)
     return driver
