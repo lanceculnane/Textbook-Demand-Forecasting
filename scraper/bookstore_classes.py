@@ -2,6 +2,9 @@ from random import shuffle
 
 class Bookstore(object):
     def __init__(self, name = None, url = None, ID = None):
+        '''
+        Bookstore class is made to contain the structure of a bookstore.
+        '''
         self.name = name
         self.url = url
         self.ID = ID
@@ -39,6 +42,9 @@ class Bookstore(object):
                             print '\t\t\t\t\t', section.name
 
     def get_dict_repr(self):
+        """
+        Returns a dicionary representation of the store
+        """
         return {'store_name':self.name,
                 'url':self.url,
                 'store_ID':self.ID,
@@ -48,6 +54,9 @@ class Bookstore(object):
                 }
 
     def load_from_dict(self,other):
+        """
+        Loads in a store's information, as formatted by get_dict_repr
+        """
         if (other):
             self.name = other['store_name']
             self.ID = other['store_ID']
@@ -58,6 +67,10 @@ class Bookstore(object):
             return self
 
     def resume(self):
+        """
+        Returns ID of first incomplete store item, or false if all items are complete
+
+        """
         for campus in self.campuses:
             if not len(campus.terms):
                 return campus.ID
@@ -73,6 +86,7 @@ class Bookstore(object):
         return False
 
     def get_section_ids(self):
+        """Returns all section IDs"""
         all_sections = []
         for campus in self.campuses:
             for term in campus.terms:
@@ -82,7 +96,36 @@ class Bookstore(object):
                             all_sections.append(section.ID)
         return all_sections
 
+    def get_unknown_section_chunks(self,chunk_size=25):
+        """
+        Input: Chunk size (# of sections per book request page) to break sections into.
+        Returns [[s1.id,s2.id],[s3.id,s4.id],...] for sections that are currently missing book information
+        """
+        all_sections = []
+        for campus in self.campuses:
+            for term in campus.terms:
+                for department in term.departments:
+                    for course in department.courses:
+                        for section in course.sections:
+                            if not section.books:
+                                all_sections.append(section.ID)
+        section_id_count = len(all_sections)
+        all_chunks = []
+        for i in range(0,section_id_count,chunk_size):
+            if (i+chunk_size >= section_id_count):
+                chunk = all_sections[i:]
+                all_chunks.append(chunk)
+            else:
+                chunk = all_sections[i:i+chunk_size]
+                all_chunks.append(chunk)
+        if not all_chunks:
+            all_chunks.append([])
+        return all_chunks
+
     def get_all_sections(self):
+        """
+        Returns all sections
+        """
         all_sections = []
         for campus in self.campuses:
             for term in campus.terms:
@@ -93,6 +136,9 @@ class Bookstore(object):
         return all_sections
 
     def get_row_lists(self, chunk_size):
+        """
+        Old version, no longer used
+        """
         all_rows = []
         for campus in self.campuses:
             for term in campus.terms:
@@ -117,6 +163,9 @@ class Bookstore(object):
         return all_chunks
 
     def add_books_from_dict(self,book_dicts):
+        """
+        Add books from a list of dicts with key:sectionID, val:list of books with info in dicts
+        """
         books_copy = [x for x in book_dicts]
         for section in self.get_all_sections():
             for book_dict in books_copy:
@@ -127,6 +176,9 @@ class Bookstore(object):
         return False
 
     def get_resume_info(self):
+        """
+        No longer in use
+        """
         resume = self.resume()
         if resume:
             for campus in self.campuses:
@@ -145,6 +197,7 @@ class Bookstore(object):
                                 if resume==section.ID:
                                     return (ampus.name, term.name, department.name, course.name, section.name)
         return false
+        
 class Campus(object):
     def __init__(self, name=None, ID=None):
         self.name = name

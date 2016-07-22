@@ -24,8 +24,8 @@ from random import shuffle
 
 if __name__=='__main__':
     df = pd.read_csv('store_urls_clean.txt',delimiter='|', header=None, names=['school','url'])
-    store_names = df['school'].values[395:421]
-    store_urls = df['url'].values[395:421]
+    store_names = df['school'].values
+    store_urls = df['url'].values
     session = r_f.start_session(proxy=True)
     client = MongoClient()
     #store_name,store_url = 'Penn State Dubois|http://psudubois.bncollege.com'.split('|')
@@ -41,14 +41,14 @@ if __name__=='__main__':
             continue
 
         store.load_from_dict(p_f.read_store_from_db(client,store,db = db))
-        for i in range(3):
+        for i in range(50):
             if not store.structure_complete:
                 try:
                     place = store.resume()
                     store = b_f.get_full_bookstore(store, session,store_name,store_url,resume=bool(place),place=place)
                 except:
-                    print 'something went terribly wrong'
-                    time.sleep(60*(i+1))
+                    print 'something went terribly wrong, iteration {}'.format(i)
+                    time.sleep(10)
                 finally:
                     p_f.write_store_to_db(client,store, db=db)
 

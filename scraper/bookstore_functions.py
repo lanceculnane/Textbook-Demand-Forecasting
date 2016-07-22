@@ -18,10 +18,23 @@ from collections import defaultdict
 from fake_useragent import UserAgent
 from random import shuffle
 
-def get_find_textbooks_url(session,bookstore_url):
-    page = session.get(bookstore_url)
-    tree = html.fromstring(page.text)
-    find_textbooks_url = tree.xpath('//a[@title="Find Textbooks"]/@href')[0]
+def get_find_textbooks_url(bookstore_url):
+    #page = session.get(bookstore_url)
+    try:
+        driver = s_f.low_bandwidth_chrome()
+        driver.get(bookstore_url)
+        tree = html.fromstring(driver.page_source)
+        find_textbooks_url = tree.xpath('//a[@title="Textbooks"]/@href')[0]
+        try:
+            driver.quit()
+        except:
+            print 'no driver to quit'
+    except:
+        try:
+            driver.quit()
+        except:
+            print 'no driver to quit'
+        return 'Fail'
     return find_textbooks_url
 
 def get_storeID(find_textbooks_url):
@@ -30,13 +43,23 @@ def get_storeID(find_textbooks_url):
     return storeID
 
 def check_multicampus(store,session):
-    find_textbooks_url = get_find_textbooks_url(session,store.url)
+    find_textbooks_url = get_find_textbooks_url(store.url)
     #driver = webdriver.Firefox()
-    driver = s_f.low_bandwidth_chrome()
-    s_f.get_site(driver, store.url)
-    s_f.get_site(driver, find_textbooks_url)
-    multicampus = driver.find_elements(By.XPATH,'//div[@class="bncbSelectBox campusSectionHeader"]')
-    driver.quit()
+    try:
+        driver = s_f.low_bandwidth_chrome()
+        s_f.get_site(driver, store.url)
+        s_f.get_site(driver, find_textbooks_url)
+        multicampus = driver.find_elements(By.XPATH,'//div[@class="bncbSelectBox campusSectionHeader"]')
+        try:
+            driver.quit()
+        except:
+            print 'no driver to quit'
+    except:
+        try:
+            driver.quit()
+        except:
+            print 'no driver to quit'
+        return 'Fail'
     return bool(multicampus)
 
 def get_multi_campus_IDs(driver):
@@ -49,18 +72,27 @@ def get_multi_campus_IDs(driver):
 
 def get_campusID_and_cookies(session, bookstore_url, find_textbooks_url, store_name):
     #driver = webdriver.Firefox()
-    driver = s_f.low_bandwidth_chrome()
-    s_f.get_site(driver, bookstore_url)
-    s_f.get_site(driver, find_textbooks_url)
+    try:
+        driver = s_f.low_bandwidth_chrome()
+        s_f.get_site(driver, bookstore_url)
+        s_f.get_site(driver, find_textbooks_url)
 
-    multicampus = driver.find_elements(By.XPATH,'//div[@class="bncbSelectBox campusSectionHeader"]')
-    if multicampus:
-        campuses = get_multi_campus_IDs(driver)
-    else:
-        campuses =[{'categoryId':driver.find_element(By.XPATH,'//input[@name="campus1"]').get_attribute("value"), 'categoryName':store_name}]
-    session.cookies.update(s_f.get_cookies_for_requests(driver))
-    all_cookies = driver.get_cookies()
-    driver.quit()
+        multicampus = driver.find_elements(By.XPATH,'//div[@class="bncbSelectBox campusSectionHeader"]')
+        if multicampus:
+            campuses = get_multi_campus_IDs(driver)
+        else:
+            campuses =[{'categoryId':driver.find_element(By.XPATH,'//input[@name="campus1"]').get_attribute("value"), 'categoryName':store_name}]
+        session.cookies.update(s_f.get_cookies_for_requests(driver))
+        all_cookies = driver.get_cookies()
+        try:
+            driver.quit()
+        except:
+            print 'no driver to quit'
+    except:
+        try:
+            driver.quit()
+        except:
+            print 'no driver to quit'
     return (campuses, all_cookies)
 
 def get_terms(session, bookstore_url, storeID, campusID):
@@ -94,17 +126,26 @@ def get_sections(session, bookstore_url,  storeID, campusID, termID, deptID, cou
 
 def reset_cookies(session, store_url, find_textbooks_url):
     #driver = webdriver.Firefox()
-    driver = s_f.low_bandwidth_chrome()
-    s_f.get_site(driver, store_url)
-    s_f.get_site(driver, find_textbooks_url)
-    session.cookies.clear()
-    session.cookies.update(s_f.get_cookies_for_requests(driver))
-    driver.quit()
+    try:
+        driver = s_f.low_bandwidth_chrome()
+        s_f.get_site(driver, store_url)
+        s_f.get_site(driver, find_textbooks_url)
+        session.cookies.clear()
+        session.cookies.update(s_f.get_cookies_for_requests(driver))
+        try:
+            driver.quit()
+        except:
+            print 'no driver to quit'
+    except:
+        try:
+            driver.quit()
+        except:
+            print 'no driver to quit'
     return session
 
 
 def get_full_bookstore(store, session, store_name, store_url, resume=False, place=None, delay=.3):
-    find_textbooks_url = get_find_textbooks_url(session,store_url)
+    find_textbooks_url = get_find_textbooks_url(store_url)
     storeID = get_storeID(find_textbooks_url)
     store.add_attributes(store_name, store_url, storeID)
     campuses, all_cookies = get_campusID_and_cookies(session, store_url, find_textbooks_url, store_name)
@@ -170,7 +211,7 @@ def get_section_chunks(store, chunk_size):
             chunk = section_ids[i:i+chunk_size]
             all_chunks.append(chunk)
     return all_chunks
-
+"""
 def get_books_page(store,row_list):
     #row_list = [{'termID':'74847930','department_name':'AA','course_name':'100','section_name':'001','sectionID':'74840757'},{'termID':'74847930','department_name':'ACCTG','course_name':'211','section_name':'002','sectionID':'74840758'}]
     try:
@@ -208,7 +249,7 @@ def get_books_page(store,row_list):
 
         driver.quit()
     return tree
-
+"""
 def fill_row(term_element,term_option_element,department_element,department_name,course_element,course_name,section_element,section_name,driver):
     delay = 15
     #term_element = driver.find_elements_by_xpath('//div[@class="bncbSelectBox termHeader"]')
@@ -249,8 +290,8 @@ def fill_row(term_element,term_option_element,department_element,department_name
         print option.text, section_name
         if option.text==section_name:
             option.click()
+            break
     '''
-    print ('filling row!')
     for i in range(20):
         section_element.clear()
         section_element.send_keys(section_name)
@@ -296,6 +337,25 @@ def get_books_page(store, sectionIDs):
     return tree
 """
 
+def get_books_page(driver,store,sectionIDs):
+    for i in range(5):
+        try:
+            base_url = store.url + '/webapp/wcs/stores/servlet/BNCBTBListView?catalogId=10001&langId=-1&storeID=' + store.ID
+            find_textbooks_url = store.url + '/webapp/wcs/stores/servlet/TBWizardView?catalogId=10001&langId=-1&storeId=' + store.ID
+            for i in range(len(sectionIDs)):
+                base_url = base_url +'&section_'+str(i+1)+'='+sectionIDs[i]
+            driver.get(base_url)
+            #tree = html.fromstring(driver.page_source)
+
+        except:
+            try:
+                driver.quit()
+            except:
+                print 'no driver to quit'
+            driver = prepare_driver_for_books(store)
+
+        return driver
+
 def get_book_prices(section, book_id, response_tree):
     book_prices=[]
     rent_used = response_tree.xpath('//div[@class="book_sec" and @data-section-id={}]//div[@class="book-list"]//div[@data-textbook-id="{}"]//ul[@class="cm_tb_bookList"]/li[@title="RENT USED"]/span[@class="bookPrice"]/@title'.format(section, book_id))
@@ -318,8 +378,8 @@ def get_book_prices(section, book_id, response_tree):
 
     return book_prices
 
-def get_book_data(row_list, response_tree):
-    sectionID_list = [section['sectionID'] for section in row_list]
+def get_book_data(sectionID_list, response_tree):
+    #sectionID_list = [section['sectionID'] for section in row_list]
     #print ('getting books')
     all_sections = []
     for section in sectionID_list:
@@ -384,26 +444,52 @@ def get_book_data(row_list, response_tree):
         '''
     return all_sections
 
+
 def get_all_books(client,store):
-    for i in range(20):
+    while (not store.books_complete):
         try:
-            row_lists = store.get_row_lists(chunk_size=25)
+            section_id_chunks = store.get_unknown_section_chunks(chunk_size=25)
             all_section_books = []
-            for j,row_list in enumerate(row_lists):
-                print('Getting book page # {} of {}'.format(j,len(row_lists)))
-                response_tree = get_books_page(store,row_list)
-                data = get_book_data(row_list,response_tree)
-                for section in data:
-                    all_section_books.append(section)
-                time.sleep(5)
+            if(section_id_chunks[0]):
+                driver = prepare_driver_for_books(store)
+                for j,chunk in enumerate(section_id_chunks):
+
+                    print('Getting book page # {} of {}'.format(j,len(section_id_chunks)))
+
+                    driver = get_books_page(driver,store,chunk)
+                    response_tree = html.fromstring(driver.page_source)
+                    data = get_book_data(chunk,response_tree)
+                    #print data
+                    for section in data:
+                        all_section_books.append(section)
+                    time.sleep(5)
             #if store completes:
             store.books_complete = 1
             #store.add_books_from_dict(all_section_books)
             #p_f.write_store_to_db(client,store)
+
         except:
-            print('Retry number {} for get_all_books'.format(i+1))
-            time.sleep(20)
+            try:
+                driver.quit()
+            except:
+                print 'no driver to quit'
+            print('Retrying get_all_books for {}'.format(store.name))
+            time.sleep(10)
         finally:
+
             store.add_books_from_dict(all_section_books)
             p_f.write_store_to_db(client,store)
+    try:
+        driver.quit()
+    except:
+        print 'no driver to quit'
     return 1
+
+def prepare_driver_for_books(store):
+    driver = s_f.low_bandwidth_chrome()
+    driver = s_f.get_site(driver,store.url)
+    find_textbooks_url = store.url + '/webapp/wcs/stores/servlet/TBWizardView?catalogId=10001&langId=-1&storeId=' + store.ID
+    driver = s_f.get_site(driver,find_textbooks_url)
+    section_elements = driver.find_elements_by_xpath('//input[@title="Section Input Box"]')
+    section_elements[0].submit()
+    return driver
