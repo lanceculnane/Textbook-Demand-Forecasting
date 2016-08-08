@@ -31,7 +31,7 @@ Scraped data came in a nested format (insert course structure graphic) and was c
 
 # Model
 A model was created to help textbook sellers determine which books they should stock for the upcoming semester.
-![Top 1000 demanded textbooks for Fall 2016](/images/demand_scatter.png)
+![Top 1000 demanded textbooks for Fall 2016](/images/demand_scatterplot.png)
 Using this model, a merchant could determine which books are expensive enough to make each sale worthwhile and also in demand enough that they can safely stock up well in advance. Since this data can be collected over a month in advance of the start of a semester, merchants will have plenty of time to purchase books while demand is low.
 
 # Future Steps
