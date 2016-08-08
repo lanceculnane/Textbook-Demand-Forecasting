@@ -24,7 +24,7 @@ https://www.nacs.org/research/industrystatistics/higheredfactsfigures.aspx
 - AWS EC2
 
 # Data
-The data for this project was obtained by webscraping the websites of over 300 college bookstores.  
+The data for this project was obtained by scraping the websites of over 300 college bookstores.  
 ![Locations of bookstores currently catalogued](/images/catalogued_stores.png?raw=true "Catalogued Bookstore Locations")
 *Catalogued Bookstore Locations*
 
