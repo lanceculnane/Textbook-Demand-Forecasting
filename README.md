@@ -27,15 +27,18 @@ https://www.nacs.org/research/industrystatistics/higheredfactsfigures.aspx
 The data for this project was obtained by webscraping the websites of over 300 college bookstores.  
 ![Locations of bookstores currently catalogued](/images/catalogued_stores.png?raw=true "Catalogued Bookstore Locations")
 *Catalogued Bookstore Locations*
+
 Scraped data came in a nested format (insert course structure graphic) and was combined with additional data sourced from the Integreated Postsecondary Education Data System, provided by the National Center for Education Statistics.  
 ![Course structure example](/images/course_structure.png?raw=true "Course Structure Example")
 *Course Structure Example*
+
 Data was stored in a MongoDB server running on an AWS EC2 instance.
 
 # Model
 A model was created to help textbook sellers determine which books they should stock for the upcoming semester.
 ![Top 1000 demanded textbooks for Fall 2016](/images/demand_scatterplot.png)
 *Top 1000 demanded textbooks for Fall 2016*
+
 Using this model, a merchant could determine which books are expensive enough to make each sale worthwhile and also in demand enough that they can safely stock up well in advance. Since this data can be collected over a month in advance of the start of a semester, merchants will have plenty of time to purchase books while demand is low.
 
 # Future Steps
