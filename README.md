@@ -1,5 +1,5 @@
 # PropheText
-This is my capstone project for the Data Science Immersive program at Galvanize.  Please contact me if you would like to examine the code that this project is based on.
+This is my capstone project for the Data Science Immersive program at Galvanize.  Please contact me if you would like to see code samples for this project.
 
 # Project Summary
 For this project, I developed a comprehensive web scraping framework to aggregate information from multiple online sources about colleges and their required textbooks. This information was then fed into a custom-made algorithm to estimate the relative number of copies of each textbook that will be purchased in the upcoming college semester.
@@ -29,7 +29,7 @@ The data for this project was obtained by scraping the websites of over 300 coll
 ![Locations of bookstores currently catalogued](/images/catalogued_stores.png?raw=true "Catalogued Bookstore Locations")
 *Catalogued Bookstore Locations*
 
-Scraped data came in a nested format (insert course structure graphic) and was combined with additional data sourced from the Integreated Postsecondary Education Data System, provided by the National Center for Education Statistics.  
+Scraped data came in a nested format and was combined with additional data sourced from the Integreated Postsecondary Education Data System, provided by the National Center for Education Statistics.  
 ![Course structure example](/images/course_structure.png?raw=true "Course Structure Example")
 *Course Structure Example*
 
