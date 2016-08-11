@@ -1,3 +1,4 @@
+# PropheText
 This is my capstone project for the Data Science Immersive program at Galvanize.  Please contact me if you would like to examine the code that this project is based on.
 
 # Project Summary
